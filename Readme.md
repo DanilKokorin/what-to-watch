@@ -1,4 +1,4 @@
-# Руководство по работе с проектом
+# Руководство по работе с ИПР проектом
 
 Данный проект создан с помощью [Create React App](https://github.com/facebook/create-react-app).
 
