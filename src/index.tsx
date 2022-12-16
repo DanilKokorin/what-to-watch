@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
+import { DATE, GENRE, TITLE } from './constants';
 
 const Settings = {
-  TITLE: 'The Grand Budapest Hotel',
-  GENRE: 'Drama',
-  DATE: '2014',
+  TITLE,
+  GENRE,
+  DATE,
 };
 
 const root = ReactDOM.createRoot(
