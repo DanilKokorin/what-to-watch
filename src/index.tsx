@@ -1,6 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
+import { DATE, GENRE, TITLE } from './constants';
+
+const Settings = {
+  TITLE,
+  GENRE,
+  DATE,
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -8,6 +15,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App />
+    <App title={Settings.TITLE} genre={Settings.GENRE} date={Settings.DATE} />
   </React.StrictMode>
 );
