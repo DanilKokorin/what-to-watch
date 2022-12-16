@@ -52,7 +52,7 @@ function MoviePageInList(): JSX.Element {
                   type="button"
                 >
                   <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
+                    <use xlinkHref="#play-s" />
                   </svg>
                   <span>Play</span>
                 </button>
@@ -61,7 +61,7 @@ function MoviePageInList(): JSX.Element {
                   type="button"
                 >
                   <svg viewBox="0 0 18 14" width="18" height="14">
-                    <use xlinkHref="#in-list"></use>
+                    <use xlinkHref="#in-list" />
                   </svg>
                   <span>My list</span>
                 </button>

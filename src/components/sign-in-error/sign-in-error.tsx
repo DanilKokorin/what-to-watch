@@ -28,7 +28,10 @@ function SignInError(): JSX.Element {
                   name="user-email"
                   id="user-email"
                 />
-                <label className="sign-in__label visually-hidden" htmlFor="user-email">
+                <label
+                  className="sign-in__label visually-hidden"
+                  htmlFor="user-email"
+                >
                   Email address
                 </label>
               </div>
