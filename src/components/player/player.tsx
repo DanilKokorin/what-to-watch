@@ -6,12 +6,11 @@ function Player(): JSX.Element {
           src="#"
           className="player__video"
           poster="img/player-poster.jpg"
+          muted
         />
-
         <button type="button" className="player__exit">
           Exit
         </button>
-
         <div className="player__controls">
           <div className="player__controls-row">
             <div className="player__time">
