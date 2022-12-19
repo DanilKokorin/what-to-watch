@@ -7,8 +7,8 @@ import SignIn from '../sign-in/sign-in';
 import MyList from '../my-list/my-list';
 import AddReview from '../add-review/add-review';
 import Player from '../player/player';
-import PrivateRoute from '../private-route/private-route';
-import Layout from '../layout/layout';
+import PrivateRoute from '../../route/private-route/private-route';
+import Layout from '../../route/layout/layout';
 
 type AppScreenProps = {
   title: string;
