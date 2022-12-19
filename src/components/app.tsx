@@ -1,14 +1,14 @@
-import MainScreen from '../main-screen/main-screen';
+import MainScreen from './main-screen';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute, AuthStatus } from '../../constants';
-import ErrorPage from '../error-page/error-page';
-import FilmsCard from '../films-card/films-card';
-import SignIn from '../sign-in/sign-in';
-import MyList from '../my-list/my-list';
-import AddReview from '../add-review/add-review';
-import Player from '../player/player';
-import PrivateRoute from '../../route/private-route/private-route';
-import Layout from '../../route/layout/layout';
+import { AppRoute, AuthStatus } from '../constants';
+import ErrorPage from './error-page';
+import FilmsCard from './films-card';
+import SignIn from './sign-in';
+import MyList from './my-list';
+import AddReview from './add-review';
+import Player from './player';
+import PrivateRoute from '../route/private-route/private-route';
+import Layout from '../route/layout/layout';
 
 type AppScreenProps = {
   title: string;

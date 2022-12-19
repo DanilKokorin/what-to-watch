@@ -1,4 +1,4 @@
-import Logo from '../logo/logo';
+import Logo from './logo';
 
 function MyList(): JSX.Element {
   return (
