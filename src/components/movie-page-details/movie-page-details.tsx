@@ -1,4 +1,4 @@
-import Logo from './logo';
+import Logo from '../logo/logo';
 
 function MoviePageDetails(): JSX.Element {
   return (

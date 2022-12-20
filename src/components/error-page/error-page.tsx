@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logo from './logo';
+import Logo from '../logo/logo';
 
 function ErrorPage() {
   return (
