@@ -6,6 +6,7 @@ function PlayerPause(): JSX.Element {
           src="#"
           className="player__video"
           poster="img/player-poster.jpg"
+          muted
         />
 
         <button type="button" className="player__exit">
