@@ -7,7 +7,7 @@ function MoviePageDetails(): JSX.Element {
         <div className="film-card__hero">
           <div className="film-card__bg">
             <img
-              src="img/bg-the-grand-budapest-hotel.jpg"
+              src="img/the-grand-budapest-hotel-bg.jpg"
               alt="The Grand Budapest Hotel"
             />
           </div>
