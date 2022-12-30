@@ -44,6 +44,8 @@ function MyList({ movies }: MyListProps): JSX.Element {
                     id={movie.id}
                     previewImage={movie.previewImage}
                     title={movie.name}
+                    movie={movie.previewVideoLink}
+                    poster={movie.posterImage}
                   />
                 )
             )}
