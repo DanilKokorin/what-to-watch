@@ -1,31 +1,40 @@
-import { useState } from 'react';
-import { generatePath, Link } from 'react-router-dom';
-import MovieCard from '../movie-card/movie-card';
+import { Fragment, useState } from 'react';
 import { Movies } from '../../mocks/movieType';
-import { AppRoute } from '../../constants';
 
 type MoviesListProps = {
   movies: Movies;
+  renderCard: (
+    id: number,
+    src: string,
+    title: string,
+    poster: string,
+    previewImage: string,
+    onHoverCardCallback: () => void,
+    onLeaveCardCallback: () => void,
+    isPlaying: boolean
+  ) => JSX.Element;
 };
 
-function MoviesList({ movies }: MoviesListProps) {
-  const [activeMovie, setActiveMovie] = useState<string | null>(null);
-
-  const onCardHandle = (movieId: string): void => {
-    setActiveMovie(movieId);
-  };
-
+function MoviesList({ movies, renderCard }: MoviesListProps) {
+  const [activeMovieId, setActiveMovieId] = useState<number>(-1);
   return (
     <>
-      {movies.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          id={movie.id}
-          previewImage={movie.previewImage}
-          title={movie.name}
-          onMouseEnter={() => onCardHandle(movie.id + movie.name)}
-        />
-      ))}
+      {movies.map((movie) => {
+        return (
+          <Fragment key={movie.id}>
+            {renderCard(
+              movie.id,
+              movie.previewVideoLink,
+              movie.name,
+              movie.posterImage,
+              movie.previewImage,
+              () => setActiveMovieId(movie.id),
+              () => setActiveMovieId(-1),
+              movie.id === activeMovieId
+            )}
+          </Fragment>
+        );
+      })}
     </>
   );
 }

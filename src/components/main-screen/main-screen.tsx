@@ -1,6 +1,9 @@
 import Logo from '../logo/logo';
 import MoviesList from '../movies-list/movies-list';
 import { Movies } from '../../mocks/movieType';
+import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
+
+const MoviesListHOC = withMovieCard(MoviesList);
 
 type MainScreenProps = {
   movies: Movies;
@@ -140,7 +143,7 @@ function MainScreen({ movies }: MainScreenProps): JSX.Element {
           </ul>
 
           <div className="catalog__films-list">
-            <MoviesList movies={movies} />
+            <MoviesListHOC movies={movies} />
           </div>
 
           <div className="catalog__more">
