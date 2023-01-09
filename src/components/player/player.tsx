@@ -1,12 +1,25 @@
-function Player(): JSX.Element {
+import { useParams } from 'react-router-dom';
+import { Movies } from '../../mocks/movieType';
+
+type PlayerProps = {
+  movies: Movies;
+};
+
+function Player({ movies }: PlayerProps): JSX.Element {
+  const params = useParams();
+  const selectedId = Number(params.id);
+
+  const movie = movies.find((movie) => movie.id === selectedId);
+
   return (
     <>
       <div className="player">
         <video
-          src="#"
+          src={movie?.videoLink}
           className="player__video"
           poster="img/player-poster.jpg"
           muted
+          autoPlay
         />
         <button type="button" className="player__exit">
           Exit
@@ -19,7 +32,7 @@ function Player(): JSX.Element {
                 Toggler
               </div>
             </div>
-            <div className="player__time-value">1:30:29</div>
+            <div className="player__time-value">{movie?.runTime}</div>
           </div>
 
           <div className="player__controls-row">
