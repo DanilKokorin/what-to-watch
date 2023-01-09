@@ -2,7 +2,6 @@ import MainScreen from '../main-screen/main-screen';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppRoute, AuthStatus } from '../../constants';
 import ErrorPage from '../error-page/error-page';
-import MoviePageDetails from '../movie-page-details/movie-page-details';
 import SignIn from '../sign-in/sign-in';
 import MyList from '../my-list/my-list';
 import AddReview from '../add-review/add-review';
@@ -10,12 +9,15 @@ import Player from '../player/player';
 import PrivateRoute from '../../route/private-route';
 import Layout from '../../route/layout';
 import { Movies } from '../../mocks/movieType';
+import Movie from '../movie/movie';
+import { Comments } from '../../mocks/commentType';
 
 type AppScreenProps = {
   movies: Movies;
+  reviews: Comments;
 };
 
-function App({ movies }: AppScreenProps): JSX.Element {
+function App({ movies, reviews }: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
@@ -31,7 +33,10 @@ function App({ movies }: AppScreenProps): JSX.Element {
             }
           />
           <Route path={AppRoute.Film}>
-            <Route index element={<MoviePageDetails />} />
+            <Route
+              index
+              element={<Movie movies={movies} reviews={reviews} />}
+            />
             <Route
               path={AppRoute.Review}
               element={

@@ -10,7 +10,7 @@ type MovieCardProps = {
   previewImage: string;
   onHoverCardCallback?: () => void;
   onLeaveCardCallback?: () => void;
-  isPlaying?: boolean;
+  isPlaying: boolean;
 };
 
 function MovieCard(props: MovieCardProps) {
