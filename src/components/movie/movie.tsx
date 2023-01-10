@@ -168,9 +168,8 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
 
           <div className="catalog__films-list">
             <MoviesListHOC
-              movies={movies}
               selectedMovieId={movie?.id}
-              selectedGenre={movie?.genre}
+              selectedMovieCard={movie?.genre}
             />
           </div>
         </section>
