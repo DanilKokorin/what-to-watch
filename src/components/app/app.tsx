@@ -22,7 +22,7 @@ function App({ movies, reviews }: AppScreenProps): JSX.Element {
     <BrowserRouter>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />}>
-          <Route index element={<MainScreen movies={movies} />} />
+          <Route index element={<MainScreen />} />
           <Route path={AppRoute.Login} element={<SignIn />} />
           <Route
             path={AppRoute.List}

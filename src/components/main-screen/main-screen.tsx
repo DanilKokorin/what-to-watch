@@ -1,16 +1,12 @@
 import Logo from '../logo/logo';
 import MoviesList from '../movies-list/movies-list';
-import { Movies } from '../../mocks/movieType';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
 import GenresList from '../genres-list/genres-list';
+import ShowMore from '../show-more/show-more';
 
 const MoviesListHOC = withMovieCard(MoviesList);
 
-type MainScreenProps = {
-  movies: Movies;
-};
-
-function MainScreen({ movies }: MainScreenProps): JSX.Element {
+function MainScreen(): JSX.Element {
   return (
     <>
       <section className="film-card">
@@ -88,17 +84,13 @@ function MainScreen({ movies }: MainScreenProps): JSX.Element {
 
       <div className="page-content">
         <section className="catalog">
-          <GenresList movies={movies} />
+          <GenresList />
 
           <div className="catalog__films-list">
             <MoviesListHOC />
           </div>
 
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">
-              Show more
-            </button>
-          </div>
+          <ShowMore />
         </section>
         <footer className="page-footer">
           <div className="logo">
