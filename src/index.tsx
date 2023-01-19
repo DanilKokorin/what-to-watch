@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/app/app';
 import { moviesMock } from './mocks/moviesMock';
+import { commentsMock } from './mocks/commentsMock';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -9,6 +10,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App movies={moviesMock} />
+    <App movies={moviesMock} reviews={commentsMock} />
   </React.StrictMode>
 );

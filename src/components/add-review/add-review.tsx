@@ -9,9 +9,9 @@ type AddReviewProps = {
 
 function AddReview({ movies }: AddReviewProps): JSX.Element {
   const params = useParams();
-  const selectedId = Number(params.id);
+  const pathId = Number(params.id);
 
-  const movie = movies.find((movie) => movie.id === selectedId);
+  const movie = movies.find((movie) => movie.id === pathId);
 
   return (
     <section className="film-card film-card--full">
