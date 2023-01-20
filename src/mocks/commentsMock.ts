@@ -6,7 +6,7 @@ export const commentsMock: Comments = [
       'Discerning travellers and Wes Anderson fans will luxuriate in the glorious Mittel-European kitsch of one of the director funniest and most exquisitely designed movies in years.',
     date: 'August 12, 2022',
     id: 1,
-    rating: 1.0,
+    rating: 1.7,
     user: {
       id: 1,
       name: 'Kate Muir',
@@ -17,7 +17,7 @@ export const commentsMock: Comments = [
       'Anderson films are too precious for some, but for those of us willing to lose ourselves in them, theyre a delight. The Grand Budapest Hotel is no different, except that he has added a hint of gravitas to the mix, improving the recipe.',
     date: 'September 10, 2022',
     id: 1,
-    rating: 2.0,
+    rating: 2.2,
     user: {
       id: 2,
       name: 'Bill Goodykoontz',
@@ -28,7 +28,7 @@ export const commentsMock: Comments = [
       'I didnt find it amusing, and while I can appreciate the creativity, its an hour and 40 minutes I wish I could take back.',
     date: 'October 09, 2022',
     id: 1,
-    rating: 3.0,
+    rating: 3.4,
     user: {
       id: 3,
       name: 'Allen Dilon',
@@ -39,7 +39,7 @@ export const commentsMock: Comments = [
       'The mannered, madcap proceedings are often delightful, occasionally silly, and here and there, gruesome and/or heartbreaking.',
     date: 'Novermber 12, 2022',
     id: 1,
-    rating: 4.0,
+    rating: 4.8,
     user: {
       id: 4,
       name: 'Matthew Lickona',
@@ -50,21 +50,20 @@ export const commentsMock: Comments = [
       'It is certainly a magical and childlike way of storytelling, even if the content is a little more adult.',
     date: 'December 02, 2022',
     id: 1,
-    rating: 5.0,
+    rating: 5.9,
     user: {
       id: 5,
       name: 'Paula Fleri-Soler',
     },
   },
   {
-    comment:
-      'It is certainly a magical and childlike way of storytelling, even if the content is a little more adult.',
+    comment: 'A magical and childlike way of storytelling.',
     date: 'January 02, 2023',
     id: 1,
-    rating: 6.0,
+    rating: 6.1,
     user: {
       id: 5,
-      name: 'Paula Fleri-Soler',
+      name: 'Kate Dure',
     },
   },
   {
