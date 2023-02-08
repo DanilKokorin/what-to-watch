@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../hooks';
-import { setGenre } from '../../store/action';
-import { Movies } from '../../mocks/movieType';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setCurrentPage, setGenre } from '../../store/action';
+import { Genres } from '../../constants';
 
-type GenresListProps = {
-  movies: Movies;
-};
+function GenresList() {
+  const { movies, genre } = useAppSelector((state) => state);
 
-function GenresList({ movies }: GenresListProps) {
   const allGenres = Object.values(movies!.map((movie) => movie.genre));
-  const genres = ['All genres', ...new Set(allGenres)];
-
+  const genres = [Genres.All, ...new Set(allGenres)];
   const [activeGenre, setActiveGenre] = useState<string>(genres[0]);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setGenre(activeGenre));
+    genre !== Genres.All && activeGenre === Genres.All
+      ? dispatch(setGenre(''))
+      : dispatch(setGenre(activeGenre));
   }, [activeGenre]);
 
   return (
@@ -34,7 +33,10 @@ function GenresList({ movies }: GenresListProps) {
             <Link
               to="#"
               className="catalog__genres-link"
-              onClick={() => setActiveGenre(genre)}
+              onClick={() => {
+                setActiveGenre(genre);
+                activeGenre !== genre && dispatch(setCurrentPage(1));
+              }}
             >
               {genre}
             </Link>

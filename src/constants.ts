@@ -17,3 +17,7 @@ export enum AuthStatus {
   NoAuth = 'NO_Auth',
   Unknown = 'UNKNOWN',
 }
+
+export enum Genres {
+  All = 'All genres',
+}
