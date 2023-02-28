@@ -1,23 +1,22 @@
 import { useParams } from 'react-router-dom';
-import { Movies } from '../../mocks/movieType';
+import { useAppSelector } from '../../hooks';
 
-type PlayerProps = {
-  movies: Movies;
-};
-
-function Player({ movies }: PlayerProps): JSX.Element {
+function Player(): JSX.Element {
   const params = useParams();
   const selectedId = Number(params.id);
 
-  const movie = movies.find((movie) => movie.id === selectedId);
+  const { movies } = useAppSelector((state) => state);
+
+  const movie: any = movies.find((movie: any) => movie.id === selectedId);
 
   return (
     <>
       <div className="player">
         <video
-          src={movie?.videoLink}
+          src={movie?.attributes.videoLink}
           className="player__video"
-          poster="img/player-poster.jpg"
+          // poster="img/player-poster.jpg"
+          poster={`http://localhost:1337/uploads/player_poster_b115a03ca8.jpg`}
           muted
           autoPlay
         />
@@ -32,7 +31,9 @@ function Player({ movies }: PlayerProps): JSX.Element {
                 Toggler
               </div>
             </div>
-            <div className="player__time-value">{movie?.runTime}</div>
+            <div className="player__time-value">
+              {movie?.attributes.runTime}
+            </div>
           </div>
 
           <div className="player__controls-row">

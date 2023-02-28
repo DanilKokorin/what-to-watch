@@ -1,12 +1,10 @@
-import { Movies } from '../../mocks/movieType';
+import { useAppSelector } from '../../hooks';
 import Logo from '../logo/logo';
 import MovieCard from '../movie-card/movie-card';
 
-type MyListProps = {
-  movies: Movies;
-};
+function MyList(): JSX.Element {
+  const { movies } = useAppSelector((state) => state);
 
-function MyList({ movies }: MyListProps): JSX.Element {
   return (
     <>
       <div className="user-page">
@@ -37,15 +35,15 @@ function MyList({ movies }: MyListProps): JSX.Element {
 
           <div className="catalog__films-list">
             {movies.map(
-              (movie) =>
+              (movie: any) =>
                 movie.isFavorite && (
                   <MovieCard
-                    key={movie.id + movie.name}
+                    key={movie.id + movie.attributes.name}
                     id={movie.id}
-                    previewImage={movie.previewImage}
-                    title={movie.name}
-                    movie={movie.previewVideoLink}
-                    poster={movie.posterImage}
+                    previewImage={`http://localhost:1337${movie.attributes.previewImage.data.attributes.url}`}
+                    title={movie.attributes.name}
+                    movie={movie.attributes.previewVideoLink}
+                    poster={`http://localhost:1337${movie.attributes.posterImage.data.attributes.url}`}
                     isPlaying={false}
                   />
                 )

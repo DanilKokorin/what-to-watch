@@ -1,23 +1,24 @@
 import { useParams } from 'react-router-dom';
 import Logo from '../logo/logo';
 import AddReviewForm from '../add-review-form/add-review-form';
-import { Movies } from '../../mocks/movieType';
+import { useAppSelector } from '../../hooks';
 
-type AddReviewProps = {
-  movies: Movies;
-};
-
-function AddReview({ movies }: AddReviewProps): JSX.Element {
+function AddReview(): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
 
-  const movie = movies.find((movie) => movie.id === pathId);
+  const { movies } = useAppSelector((state) => state);
+
+  const movie: any = movies.find((movie) => movie.id === pathId);
 
   return (
     <section className="film-card film-card--full">
       <div className="film-card__header">
         <div className="film-card__bg">
-          <img src={movie?.backgroundImage} alt={movie?.name} />
+          <img
+            src={`http://localhost:1337${movie.attributes?.backgroundImage.data.attributes?.url}`}
+            alt={movie?.attributes.name}
+          />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -29,7 +30,7 @@ function AddReview({ movies }: AddReviewProps): JSX.Element {
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
                 <a href="film-page.html" className="breadcrumbs__link">
-                  {movie?.name}
+                  {movie.attributes.name}
                 </a>
               </li>
               <li className="breadcrumbs__item">
@@ -57,8 +58,8 @@ function AddReview({ movies }: AddReviewProps): JSX.Element {
 
         <div className="film-card__poster film-card__poster--small">
           <img
-            src={movie?.posterImage}
-            alt={movie?.name}
+            src={`http://localhost:1337${movie.attributes?.posterImage.data.attributes?.url}`}
+            alt={movie.attributes.name}
             width="218"
             height="327"
           />

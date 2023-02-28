@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
+import { useAppSelector } from '../../hooks';
 import { Comments } from '../../mocks/commentType';
-import { Movies } from '../../mocks/movieType';
 import Logo from '../logo/logo';
 import MoviePageDetails from '../movie-page-details/movie-page-details';
 import MoviePageReviews from '../movie-page-reviews/movie-page-reviews';
@@ -12,7 +12,6 @@ import Tab from '../tabs/tab';
 import Tabs from '../tabs/tabs';
 
 type MovieProps = {
-  movies: Movies;
   reviews: Comments;
 };
 
@@ -31,13 +30,15 @@ function toHoursAndMinutes(totalMinutes: number) {
   return `${hours}h ${minutes}m`;
 }
 
-function Movie({ movies, reviews }: MovieProps): JSX.Element {
+function Movie({ reviews }: MovieProps): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
 
-  const movie = movies.find((movie) => movie.id === pathId);
+  const { movies } = useAppSelector((state) => state);
 
-  const runTime = toHoursAndMinutes(movie!.runTime);
+  const movie: any = movies.find((movie: any) => movie.id === pathId);
+
+  const runTime = toHoursAndMinutes(movie?.attributes.runTime);
 
   const tabs: TabsConfigItem[] = [
     {
@@ -45,11 +46,11 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
       label: 'Overview',
       component: movie && (
         <MoviePage
-          rating={movie.rating}
-          description={movie.description}
-          scoresCount={movie.scoresCount}
-          director={movie.director}
-          starring={movie.starring}
+          rating={movie.attributes?.rating}
+          description={movie.attributes?.description}
+          scoresCount={movie.attributes?.scoresCount}
+          director={movie.attributes?.director}
+          starring={movie.attributes?.starrings.data}
         />
       ),
     },
@@ -58,11 +59,13 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
       label: 'Details',
       component: movie && (
         <MoviePageDetails
-          director={movie.director}
-          starring={movie.starring.map((item) => item)}
+          director={movie.attributes.director}
+          starring={movie.attributes.starrings.data.map(
+            (item: any) => item.attributes.name
+          )}
           runTime={runTime}
-          genre={movie.genre}
-          released={movie.released}
+          genre={movie.attributes.genre}
+          released={movie.attributes.released}
         />
       ),
     },
@@ -80,7 +83,10 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
       <section className="film-card film-card--full">
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img src={movie?.backgroundImage} alt={movie?.name} />
+            <img
+              src={`http://localhost:1337${movie.attributes.backgroundImage.data.attributes.url}`}
+              alt={movie?.attributes.name}
+            />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -107,10 +113,14 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
 
           <div className="film-card__wrap">
             <div className="film-card__desc">
-              <h2 className="film-card__title">{movie?.name}</h2>
+              <h2 className="film-card__title">{movie?.attributes.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{movie?.genre}</span>
-                <span className="film-card__year">{movie?.released}</span>
+                <span className="film-card__genre">
+                  {movie?.attributes.genre}
+                </span>
+                <span className="film-card__year">
+                  {movie?.attributes.released}
+                </span>
               </p>
 
               <div className="film-card__buttons">
@@ -144,8 +154,8 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
           <div className="film-card__info">
             <div className="film-card__poster film-card__poster--big">
               <img
-                src={movie?.posterImage}
-                alt={movie?.name}
+                src={`http://localhost:1337${movie.attributes?.posterImage.data.attributes?.url}`}
+                alt={movie?.attributes.name}
                 width="218"
                 height="327"
               />
@@ -169,7 +179,7 @@ function Movie({ movies, reviews }: MovieProps): JSX.Element {
           <div className="catalog__films-list">
             <MoviesListHOC
               selectedMovieId={movie?.id}
-              selectedMovieCard={movie?.genre}
+              selectedMovieCard={movie?.attributes.genre}
             />
           </div>
         </section>
