@@ -15,8 +15,8 @@ function Player(): JSX.Element {
         <video
           src={movie?.attributes.videoLink}
           className="player__video"
-          poster={`http://localhost:1337/uploads/player_poster_b115a03ca8.jpg`}
           // poster="img/player-poster.jpg"
+          poster={`http://localhost:1337/uploads/player_poster_b115a03ca8.jpg`}
           muted
           autoPlay
         />
