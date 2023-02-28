@@ -3,13 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setCurrentPage } from '../../store/action';
 
 function ShowMore() {
-  const {
-    currentPage,
-    totalCountMovies,
-    moviesPerPage,
-    isLoading,
-    moviesByGenre,
-  } = useAppSelector((state) => state);
+  const { currentPage, totalCountMovies, moviesPerPage, moviesByGenre } =
+    useAppSelector((state) => state);
   const [showMoreButton, setShowMoreButton] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();
@@ -35,7 +30,6 @@ function ShowMore() {
           className="catalog__button"
           type="button"
           onClick={loadMoreHandle}
-          disabled={isLoading}
         >
           Show more
         </button>

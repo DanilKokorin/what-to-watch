@@ -3,10 +3,12 @@ import {
   setGenre,
   getMoviesByGenre,
   setCurrentPage,
-  isFetching,
+  loadMovies,
+  requireAuthorization,
+  setError,
 } from './action';
 import { Movies } from '../mocks/movieType';
-import { moviesMock } from '../mocks/moviesMock';
+import { AuthStatus } from '../constants';
 
 type MoviesReducerState = {
   genre: string;
@@ -15,20 +17,28 @@ type MoviesReducerState = {
   totalCountMovies: number;
   currentPage: number;
   moviesPerPage: number;
-  isLoading: boolean;
+  authStatus: AuthStatus;
+  error: string;
+  isDataLoaded: boolean;
 };
 
 const initialState: MoviesReducerState = {
   genre: '',
-  movies: moviesMock,
+  movies: [],
   moviesByGenre: [],
   totalCountMovies: 0,
   currentPage: 1,
   moviesPerPage: 8,
-  isLoading: false,
+  authStatus: AuthStatus.Unknown,
+  error: '',
+  isDataLoaded: false,
 };
 
 const moviesReducer = createReducer(initialState, (builder) => {
+  builder.addCase(loadMovies, (state, action) => {
+    state.movies = action.payload;
+    state.isDataLoaded = true;
+  });
   builder.addCase(setGenre, (state, action) => {
     state.genre = action.payload;
   });
@@ -36,15 +46,20 @@ const moviesReducer = createReducer(initialState, (builder) => {
     state.moviesByGenre =
       state.genre === ''
         ? state.movies
-        : state.movies.filter((movie) => movie.genre === state.genre);
+        : state.movies.filter(
+            (movie: any) => movie.attributes.genre === state.genre
+          );
 
     state.totalCountMovies = state.moviesByGenre.length;
   });
   builder.addCase(setCurrentPage, (state, action) => {
     state.currentPage = action.payload;
   });
-  builder.addCase(isFetching, (state, action) => {
-    state.isLoading = action.payload;
+  builder.addCase(requireAuthorization, (state, action) => {
+    state.authStatus = action.payload;
+  });
+  builder.addCase(setError, (state, action) => {
+    state.error = action.payload;
   });
 });
 

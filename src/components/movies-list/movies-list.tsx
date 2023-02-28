@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Movies } from '../../mocks/movieType';
-import { getMoviesByGenre, isFetching } from '../../store/action';
+import { getMoviesByGenre } from '../../store/action';
+import Spinner from '../spinner/spinner';
 
 type MoviesListProps = {
   renderCard: (
@@ -23,7 +24,7 @@ function MoviesList({
   selectedMovieId,
   selectedMovieCard,
 }: MoviesListProps) {
-  const { genre, moviesByGenre, moviesPerPage, currentPage, isLoading } =
+  const { genre, moviesByGenre, moviesPerPage, currentPage, isDataLoaded } =
     useAppSelector((state) => state);
 
   const [activeMovieId, setActiveMovieId] = useState<number>(-1);
@@ -40,10 +41,8 @@ function MoviesList({
   };
 
   useEffect(() => {
-    dispatch(isFetching(true));
     dispatch(getMoviesByGenre());
-    dispatch(isFetching(false));
-  }, [currentPage, genre]);
+  }, [currentPage, genre, isDataLoaded]);
 
   useEffect(() => {
     setCurrentMovies([]);
@@ -77,23 +76,26 @@ function MoviesList({
 
   return (
     <>
-      {!isLoading &&
-        currentMovies.map((movie) => {
+      {isDataLoaded ? (
+        currentMovies.map((movie: any) => {
           return (
             <Fragment key={movie.id}>
               {renderCard(
                 movie.id,
-                movie.previewVideoLink,
-                movie.name,
-                movie.posterImage,
-                movie.previewImage,
+                movie.attributes.previewVideoLink,
+                movie.attributes.name,
+                `http://localhost:1337${movie.attributes.posterImage.data.attributes.url}`,
+                `http://localhost:1337${movie.attributes.previewImage.data.attributes.url}`,
                 () => setActiveMovieId(movie.id),
                 () => setActiveMovieId(-1),
                 !selectedMovieCard && movie.id === activeMovieId
               )}
             </Fragment>
           );
-        })}
+        })
+      ) : (
+        <Spinner />
+      )}
     </>
   );
 }

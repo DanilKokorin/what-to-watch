@@ -8,16 +8,14 @@ import AddReview from '../add-review/add-review';
 import Player from '../player/player';
 import PrivateRoute from '../../route/private-route';
 import Layout from '../../route/layout';
-import { Movies } from '../../mocks/movieType';
 import Movie from '../movie/movie';
 import { Comments } from '../../mocks/commentType';
 
 type AppScreenProps = {
-  movies: Movies;
   reviews: Comments;
 };
 
-function App({ movies, reviews }: AppScreenProps): JSX.Element {
+function App({ reviews }: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
@@ -28,25 +26,22 @@ function App({ movies, reviews }: AppScreenProps): JSX.Element {
             path={AppRoute.List}
             element={
               <PrivateRoute authStatus={AuthStatus.Auth}>
-                <MyList movies={movies} />
+                <MyList />
               </PrivateRoute>
             }
           />
           <Route path={AppRoute.Film}>
-            <Route
-              index
-              element={<Movie movies={movies} reviews={reviews} />}
-            />
+            <Route index element={<Movie reviews={reviews} />} />
             <Route
               path={AppRoute.Review}
               element={
                 <PrivateRoute authStatus={AuthStatus.Auth}>
-                  <AddReview movies={movies} />
+                  <AddReview />
                 </PrivateRoute>
               }
             />
           </Route>
-          <Route path={AppRoute.Player} element={<Player movies={movies} />} />
+          <Route path={AppRoute.Player} element={<Player />} />
         </Route>
         <Route path={AppRoute.Any} element={<ErrorPage />} />
       </Routes>

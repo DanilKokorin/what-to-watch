@@ -1,4 +1,6 @@
 import { createAction } from '@reduxjs/toolkit';
+import { AuthStatus } from '../constants';
+import { Movies } from '../mocks/movieType';
 
 export const Action = {
   SET_GENRE: 'SET_GENRE',
@@ -6,6 +8,9 @@ export const Action = {
   SET_CURRENT_PAGE: 'SET_CURRENT_PAGE',
   FETCHING_MOVIES: 'FETCHING_MOVIES',
 };
+
+// server
+export const loadMovies = createAction<Movies>('data/${Action.LOAD_MOVIES');
 
 export const setGenre = createAction(
   'genre/${Action.SET_GENRE}',
@@ -20,15 +25,6 @@ export const getMoviesByGenre = createAction(
   'movies/${Action.GET_MOVIES_BY_GENRE}'
 );
 
-export const isFetching = createAction(
-  'movies/${Action.FETCHING_MOVIES}',
-  (value: boolean) => {
-    return {
-      payload: value,
-    };
-  }
-);
-
 export const setCurrentPage = createAction(
   'page/${Action.SET_CURRENT_PAGE}',
   (value: number) => {
@@ -37,3 +33,9 @@ export const setCurrentPage = createAction(
     };
   }
 );
+
+export const requireAuthorization = createAction<AuthStatus>(
+  'user/${Action.REQUIRE_AUTH}'
+);
+
+export const setError = createAction<string>('movies/setError');

@@ -7,7 +7,9 @@ import { Genres } from '../../constants';
 function GenresList() {
   const { movies, genre } = useAppSelector((state) => state);
 
-  const allGenres = Object.values(movies!.map((movie) => movie.genre));
+  const allGenres = Object.values(
+    movies!.map((movie: any) => movie.attributes.genre)
+  );
   const genres = [Genres.All, ...new Set(allGenres)];
   const [activeGenre, setActiveGenre] = useState<string>(genres[0]);
 
