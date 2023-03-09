@@ -5,7 +5,7 @@ import {
   setCurrentPage,
   loadMovies,
   requireAuthorization,
-  setError,
+  setUser,
 } from './action';
 import { Movies } from '../mocks/movieType';
 import { AuthStatus } from '../constants';
@@ -18,8 +18,8 @@ type MoviesReducerState = {
   currentPage: number;
   moviesPerPage: number;
   authStatus: AuthStatus;
-  error: string;
   isDataLoaded: boolean;
+  user: string;
 };
 
 const initialState: MoviesReducerState = {
@@ -30,8 +30,8 @@ const initialState: MoviesReducerState = {
   currentPage: 1,
   moviesPerPage: 8,
   authStatus: AuthStatus.Unknown,
-  error: '',
   isDataLoaded: false,
+  user: '',
 };
 
 const moviesReducer = createReducer(initialState, (builder) => {
@@ -58,8 +58,8 @@ const moviesReducer = createReducer(initialState, (builder) => {
   builder.addCase(requireAuthorization, (state, action) => {
     state.authStatus = action.payload;
   });
-  builder.addCase(setError, (state, action) => {
-    state.error = action.payload;
+  builder.addCase(setUser, (state, action) => {
+    state.user = action.payload;
   });
 });
 

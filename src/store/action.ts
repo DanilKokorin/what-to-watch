@@ -1,12 +1,13 @@
 import { createAction } from '@reduxjs/toolkit';
-import { AuthStatus } from '../constants';
+import { AppRoute, AuthStatus } from '../constants';
 import { Movies } from '../mocks/movieType';
 
 export const Action = {
+  LOAD_MOVIES: 'LOAD_MOVIES',
   SET_GENRE: 'SET_GENRE',
   GET_MOVIES_BY_GENRE: 'GET_MOVIES_BY_GENRE',
   SET_CURRENT_PAGE: 'SET_CURRENT_PAGE',
-  FETCHING_MOVIES: 'FETCHING_MOVIES',
+  REQUIRE_AUTH: 'REQUIRE_AUTH',
 };
 
 // server
@@ -38,4 +39,10 @@ export const requireAuthorization = createAction<AuthStatus>(
   'user/${Action.REQUIRE_AUTH}'
 );
 
-export const setError = createAction<string>('movies/setError');
+export const redirectToRoute = createAction<AppRoute>('movie/redirectToRoute');
+
+export const setUser = createAction('user/setUser', (value: string) => {
+  return {
+    payload: value,
+  };
+});

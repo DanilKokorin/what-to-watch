@@ -1,36 +1,42 @@
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
-import { Movies } from '../mocks/movieType';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { HTTP_CODE } from '../constants';
 import { getToken } from './token';
 
-export const baseUrl = process.env.APP_BASE_URL;
+export const BACKEND_URL = process.env.APP_BASE_URL;
+const REQUEST_TIMEOUT = 5000;
 
-export const apiClient: AxiosInstance = axios.create({
-  baseURL: baseUrl,
-  timeout: 5000,
-});
+export const createAPI = (): AxiosInstance => {
+  const api = axios.create({
+    baseURL: BACKEND_URL,
+    timeout: REQUEST_TIMEOUT,
+  });
 
-apiClient.interceptors.request.use((config: AxiosRequestConfig) => {
-  const token = getToken();
+  const setAuthHeader = (config: any, token: string | null): void => {
+    config.headers.Authorization = `Bearer + ' ' + ${token}`;
+  };
 
-  if (token) {
-    config.headers!['x-token'] = token;
-  }
+  api.interceptors.request.use((config: AxiosRequestConfig) => {
+    const token = getToken();
 
-  return config;
-});
+    if (token && config.headers) {
+      // config.headers['x-token'] = token;
+      setAuthHeader(config, token);
+    }
 
-export async function getMovies(url: string): Promise<Movies | AxiosError> {
-  try {
-    return apiClient
-      .get<Movies>(process.env.REACT_APP_API_URL + url)
-      .then((res: AxiosResponse) => res.data.data);
-  } catch (e: any) {
-    const error = e as AxiosError;
-    return error;
-  }
-}
+    return config;
+  });
+
+  api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    (error: any) => {
+      if (error.response.status !== HTTP_CODE.OK) {
+        toast.warn(`Ответ от сервера: ${error.response.status}`);
+      }
+
+      return Promise.reject(error);
+    }
+  );
+
+  return api;
+};

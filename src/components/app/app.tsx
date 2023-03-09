@@ -1,6 +1,6 @@
 import MainScreen from '../main-screen/main-screen';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute, AuthStatus } from '../../constants';
+import { Route, Routes } from 'react-router-dom';
+import { AppRoute } from '../../constants';
 import ErrorPage from '../error-page/error-page';
 import SignIn from '../sign-in/sign-in';
 import MyList from '../my-list/my-list';
@@ -10,6 +10,8 @@ import PrivateRoute from '../../route/private-route';
 import Layout from '../../route/layout';
 import Movie from '../movie/movie';
 import { Comments } from '../../mocks/commentType';
+import HistoryRouter from '../history-route/history-route';
+import browserHistory from '../history-route/browser-history';
 
 type AppScreenProps = {
   reviews: Comments;
@@ -17,7 +19,7 @@ type AppScreenProps = {
 
 function App({ reviews }: AppScreenProps): JSX.Element {
   return (
-    <BrowserRouter>
+    <HistoryRouter history={browserHistory}>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />}>
           <Route index element={<MainScreen />} />
@@ -25,7 +27,7 @@ function App({ reviews }: AppScreenProps): JSX.Element {
           <Route
             path={AppRoute.List}
             element={
-              <PrivateRoute authStatus={AuthStatus.Auth}>
+              <PrivateRoute>
                 <MyList />
               </PrivateRoute>
             }
@@ -35,7 +37,7 @@ function App({ reviews }: AppScreenProps): JSX.Element {
             <Route
               path={AppRoute.Review}
               element={
-                <PrivateRoute authStatus={AuthStatus.Auth}>
+                <PrivateRoute>
                   <AddReview />
                 </PrivateRoute>
               }
@@ -45,7 +47,7 @@ function App({ reviews }: AppScreenProps): JSX.Element {
         </Route>
         <Route path={AppRoute.Any} element={<ErrorPage />} />
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 

@@ -1,6 +1,49 @@
 import Logo from '../logo/logo';
+import { FormEvent, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute, AuthStatus } from '../../constants';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { loginAction } from '../../store/api-action';
+import { AuthData } from '../../types/data';
+import { setUser } from '../../store/action';
 
 function SignIn(): JSX.Element {
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { authStatus } = useAppSelector((state) => state);
+
+  useEffect(() => {
+    loginRef.current?.focus();
+  }, []);
+
+  const onSubmit = (authData: AuthData) => {
+    dispatch(loginAction(authData));
+  };
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    if (loginRef.current !== null && passwordRef.current !== null) {
+      onSubmit({
+        identifier: loginRef.current.value,
+        password: passwordRef.current.value,
+      });
+      dispatch(setUser(loginRef.current.value));
+      navigate(AppRoute.Main);
+    }
+  };
+
+  useEffect(() => {
+    if (authStatus === AuthStatus.Auth) {
+      navigate(AppRoute.Main);
+    }
+  }, [authStatus, navigate]);
+
   return (
     <>
       <div className="user-page">
@@ -11,12 +54,14 @@ function SignIn(): JSX.Element {
         </header>
 
         <div className="sign-in user-page__content">
-          <form action="#" className="sign-in__form">
+          <form action="" className="sign-in__form" onSubmit={handleSubmit}>
             <div className="sign-in__fields">
               <div className="sign-in__field">
                 <input
+                  ref={loginRef}
                   className="sign-in__input"
-                  type="email"
+                  // type="email"
+                  type="text"
                   placeholder="Email address"
                   name="user-email"
                   id="user-email"
@@ -30,6 +75,7 @@ function SignIn(): JSX.Element {
               </div>
               <div className="sign-in__field">
                 <input
+                  ref={passwordRef}
                   className="sign-in__input"
                   type="password"
                   placeholder="Password"
