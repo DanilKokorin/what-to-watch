@@ -1,11 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { store } from '.';
-import { apiClient, getMovies } from '../api/apiClient';
+import { AxiosError, AxiosResponse } from 'axios';
+import { api, store } from '.';
 import { errorHandle } from '../api/error-handle';
-import { dropToken, saveToken } from '../api/token';
-import { APIRoute, AuthStatus, TIMEOUT_SHOW_ERROR } from '../constants';
+import { dropToken, getToken, saveToken } from '../api/token';
+import { AppRoute, APIRoute, AuthStatus } from '../constants';
+import { loadMovies, redirectToRoute, requireAuthorization } from './action';
 import { Movies } from '../mocks/movieType';
-import { loadMovies, requireAuthorization, setError } from './action';
+import { AuthData, UserData } from '../types/data';
+
+async function getMovies(url: string): Promise<Movies | AxiosError> {
+  try {
+    return api
+      .get<Movies>(process.env.REACT_APP_API_URL + url)
+      .then((res: AxiosResponse) => res.data.data);
+  } catch (e: any) {
+    const error = e as AxiosError;
+    return error;
+  }
+}
 
 export const fetchMoviesAction = createAsyncThunk(
   'data/fetchMovies',
@@ -20,35 +32,35 @@ export const fetchMoviesAction = createAsyncThunk(
 );
 
 export const checkAuthStatus = createAsyncThunk('user/checkAuth', async () => {
-  try {
-    await apiClient.get(APIRoute.Login);
+  // try {
+  //   await api.get(process.env.REACT_APP_API_URL + APIRoute.LoginCheker);
+  //   store.dispatch(requireAuthorization(AuthStatus.Auth));
+  // } catch (error) {
+  //   errorHandle(error);
+  //   store.dispatch(requireAuthorization(AuthStatus.NoAuth));
+  // }
+
+  if (getToken()) {
     store.dispatch(requireAuthorization(AuthStatus.Auth));
-  } catch (error) {
-    errorHandle(error);
-    store.dispatch(requireAuthorization(AuthStatus.NoAuth));
+    alert(store.getState().user);
   }
 });
 
-export type AuthData = {
-  login: string;
-  password: string;
-};
-
-export type UserData = {
-  id: number;
-  email: string;
-  token: string;
-};
-
 export const loginAction = createAsyncThunk(
   'user/login',
-  async ({ login: email, password }: AuthData) => {
+  async ({ identifier, password }: AuthData) => {
     try {
       const {
-        data: { token },
-      } = await apiClient.post<UserData>(APIRoute.Login, { email, password });
+        data: { jwt },
+      } = await api.post<UserData>(
+        process.env.REACT_APP_API_URL + APIRoute.Login,
+        {
+          identifier,
+          password,
+        }
+      );
 
-      saveToken(token);
+      saveToken(jwt);
 
       store.dispatch(requireAuthorization(AuthStatus.Auth));
     } catch (error) {
@@ -60,14 +72,11 @@ export const loginAction = createAsyncThunk(
 
 export const logoutAction = createAsyncThunk('user/logout', async () => {
   try {
-    await apiClient.delete(APIRoute.Logout);
+    // await api.delete(APIRoute.Logout);
     dropToken();
     store.dispatch(requireAuthorization(AuthStatus.NoAuth));
+    store.dispatch(redirectToRoute(AppRoute.Main));
   } catch (error) {
     errorHandle(error);
   }
-});
-
-export const clearErrorAction = createAsyncThunk('movies/clearError', () => {
-  setTimeout(() => store.dispatch(setError('')), TIMEOUT_SHOW_ERROR);
 });

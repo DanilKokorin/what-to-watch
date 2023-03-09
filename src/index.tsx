@@ -5,7 +5,9 @@ import App from './components/app/app';
 import { commentsMock } from './mocks/commentsMock';
 import { store } from './store';
 import { checkAuthStatus, fetchMoviesAction } from './store/api-action';
-import ErrorMessage from './components/error-message';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,8 +18,8 @@ store.dispatch(checkAuthStatus());
 
 root.render(
   <React.StrictMode>
+    <ToastContainer />
     <Provider store={store}>
-      <ErrorMessage />
       <App reviews={commentsMock} />
     </Provider>
   </React.StrictMode>

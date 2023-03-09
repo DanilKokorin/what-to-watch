@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
 import { useAppSelector } from '../../hooks';
 import { Comments } from '../../mocks/commentType';
-import Logo from '../logo/logo';
+import Header from '../header/header';
 import MoviePageDetails from '../movie-page-details/movie-page-details';
 import MoviePageReviews from '../movie-page-reviews/movie-page-reviews';
 import MoviePage from '../movie-page/movie-page';
@@ -91,25 +91,7 @@ function Movie({ reviews }: MovieProps): JSX.Element {
 
           <h1 className="visually-hidden">WTW</h1>
 
-          <header className="page-header film-card__head">
-            <Logo />
-
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img
-                    src="img/avatar.jpg"
-                    alt="User avatar"
-                    width="63"
-                    height="63"
-                  />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <a className="user-block__link">Sign out</a>
-              </li>
-            </ul>
-          </header>
+          <Header />
 
           <div className="film-card__wrap">
             <div className="film-card__desc">
