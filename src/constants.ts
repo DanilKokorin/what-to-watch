@@ -13,7 +13,7 @@ export enum HTTP_CODE {
 export enum APIRoute {
   Movies = '/movies?populate=*',
   Movie = '/movies',
-  Comments = '/comments?populate=*',
+  Comments = '/comments/?populate=*',
   CommentUpload = '/comments',
   LoginCheker = '/auth-check-temps',
   Login = '/auth/local',

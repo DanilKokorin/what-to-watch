@@ -32,7 +32,7 @@ function AddReviewForm(): JSX.Element {
   const user_id = jwt_decode(getToken()) as any;
 
   const date = new Date().toLocaleDateString('en-us', {
-    month: 'short',
+    month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
@@ -54,7 +54,7 @@ function AddReviewForm(): JSX.Element {
           comment: formData.review,
           rating: formData.rating,
           date,
-          users_permissions_user: user_id,
+          users_permissions_user: user_id.id,
         })
       ).then(() => {
         setFormData({

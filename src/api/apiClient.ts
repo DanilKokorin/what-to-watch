@@ -13,7 +13,7 @@ export const createAPI = (): AxiosInstance => {
   });
 
   const setAuthHeader = (config: any, token: string | null): void => {
-    config.headers.Authorization = `Bearer + ' ' + ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   };
 
   api.interceptors.request.use((config: AxiosRequestConfig) => {
@@ -21,7 +21,7 @@ export const createAPI = (): AxiosInstance => {
 
     if (token && config.headers) {
       // config.headers['x-token'] = token;
-      setAuthHeader(config, token);
+      // setAuthHeader(config, token);
     }
 
     return config;

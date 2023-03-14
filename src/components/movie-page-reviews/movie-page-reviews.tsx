@@ -31,7 +31,8 @@ function MoviePageReviews({ filmId }: MoviePageReviewsProps): JSX.Element {
           <footer className="review__details">
             <cite className="review__author">
               {review.attributes.reviewer.data?.attributes.name ||
-                review.attributes.users_permissions_user}
+                review.attributes.users_permissions_user.data?.attributes
+                  .username}
             </cite>
             <time
               className="review__date"

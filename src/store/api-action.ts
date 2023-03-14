@@ -95,7 +95,8 @@ export const leaveCommentAction = createAsyncThunk(
         },
         {
           headers: {
-            Authorization: `Bearer + ${getToken()}`,
+            // apiClient -> Interceptors
+            Authorization: `Bearer ${getToken()}`,
           },
         }
       );

@@ -57,7 +57,7 @@ function Movie(): JSX.Element {
           description={movie.attributes?.description}
           scoresCount={movie.attributes?.scoresCount}
           director={movie.attributes?.director}
-          starring={movie.attributes?.starrings.data}
+          starring={movie.attributes?.starrings?.data}
         />
       ),
     },
@@ -67,7 +67,7 @@ function Movie(): JSX.Element {
       component: movie && (
         <MoviePageDetails
           director={movie.attributes.director}
-          starring={movie.attributes.starrings.data.map(
+          starring={movie.attributes.starrings?.data?.map(
             (item: any) => item.attributes.name
           )}
           runTime={runTime}
@@ -89,7 +89,7 @@ function Movie(): JSX.Element {
         <div className="film-card__hero">
           <div className="film-card__bg">
             <img
-              src={`http://localhost:1337${movie?.attributes.backgroundImage.data.attributes.url}`}
+              src={`http://localhost:1337${movie?.attributes.backgroundImage.data?.attributes.url}`}
               alt={movie?.attributes.name}
             />
           </div>
@@ -146,7 +146,7 @@ function Movie(): JSX.Element {
           <div className="film-card__info">
             <div className="film-card__poster film-card__poster--big">
               <img
-                src={`http://localhost:1337${movie?.attributes.posterImage.data.attributes.url}`}
+                src={`http://localhost:1337${movie?.attributes.posterImage.data?.attributes.url}`}
                 alt={movie?.attributes.name}
                 width="218"
                 height="327"

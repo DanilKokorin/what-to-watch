@@ -34,7 +34,7 @@ function MoviePage({
 
         <p className="film-card__starring">
           <strong>
-            Starring: {`${starring.map((item: any) => item.attributes.name)}`}
+            Starring: {`${starring?.map((item: any) => item.attributes?.name)}`}
           </strong>
         </p>
       </div>
