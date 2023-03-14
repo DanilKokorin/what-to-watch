@@ -1,4 +1,4 @@
-type Movie = {
+export type Movie = {
   id: number;
   name: string;
   posterImage: string;
@@ -17,5 +17,3 @@ type Movie = {
   released: number;
   isFavorite: boolean;
 };
-
-export type Movies = Movie[];

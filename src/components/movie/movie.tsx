@@ -1,8 +1,11 @@
-import { ReactNode } from 'react';
-import { useParams } from 'react-router-dom';
+import { ReactNode, useEffect } from 'react';
+import { generatePath, Link, useParams } from 'react-router-dom';
+import { AppRoute, AuthStatus } from '../../constants';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
 import { useAppSelector } from '../../hooks';
-import { Comments } from '../../mocks/commentType';
+import { store } from '../../store';
+import { fetchMovieAction } from '../../store/api-action';
+import ErrorPage from '../error-page/error-page';
 import Header from '../header/header';
 import MoviePageDetails from '../movie-page-details/movie-page-details';
 import MoviePageReviews from '../movie-page-reviews/movie-page-reviews';
@@ -10,10 +13,6 @@ import MoviePage from '../movie-page/movie-page';
 import MoviesList from '../movies-list/movies-list';
 import Tab from '../tabs/tab';
 import Tabs from '../tabs/tabs';
-
-type MovieProps = {
-  reviews: Comments;
-};
 
 type TabsConfigItem = {
   id: number;
@@ -30,13 +29,21 @@ function toHoursAndMinutes(totalMinutes: number) {
   return `${hours}h ${minutes}m`;
 }
 
-function Movie({ reviews }: MovieProps): JSX.Element {
+function Movie(): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
 
-  const { movies } = useAppSelector((state) => state);
+  useEffect(() => {
+    store.dispatch(fetchMovieAction(pathId));
+  }, []);
 
-  const movie: any = movies.find((movie: any) => movie.id === pathId);
+  const { movie, authStatus, errorMovieLoading } = useAppSelector(
+    (state) => state
+  );
+
+  if (errorMovieLoading) {
+    return <ErrorPage />;
+  }
 
   const runTime = toHoursAndMinutes(movie?.attributes.runTime);
 
@@ -72,9 +79,7 @@ function Movie({ reviews }: MovieProps): JSX.Element {
     {
       id: 3,
       label: 'Reviews',
-      component: movie && (
-        <MoviePageReviews reviews={reviews} filmId={movie.id} />
-      ),
+      component: movie && <MoviePageReviews filmId={movie.id} />,
     },
   ];
 
@@ -84,7 +89,7 @@ function Movie({ reviews }: MovieProps): JSX.Element {
         <div className="film-card__hero">
           <div className="film-card__bg">
             <img
-              src={`http://localhost:1337${movie.attributes.backgroundImage.data.attributes.url}`}
+              src={`http://localhost:1337${movie?.attributes.backgroundImage.data.attributes.url}`}
               alt={movie?.attributes.name}
             />
           </div>
@@ -124,9 +129,14 @@ function Movie({ reviews }: MovieProps): JSX.Element {
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn film-card__button">
-                  Add review
-                </a>
+                {authStatus === AuthStatus.Auth && (
+                  <Link
+                    to={generatePath(AppRoute.Review, { id: `${pathId}` })}
+                    className="btn film-card__button"
+                  >
+                    Add review
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -136,7 +146,7 @@ function Movie({ reviews }: MovieProps): JSX.Element {
           <div className="film-card__info">
             <div className="film-card__poster film-card__poster--big">
               <img
-                src={`http://localhost:1337${movie.attributes?.posterImage.data.attributes?.url}`}
+                src={`http://localhost:1337${movie?.attributes.posterImage.data.attributes.url}`}
                 alt={movie?.attributes.name}
                 width="218"
                 height="327"

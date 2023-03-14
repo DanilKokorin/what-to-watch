@@ -1,40 +1,50 @@
-import { Comments } from '../../mocks/commentType';
+import { useEffect } from 'react';
+import { useAppSelector } from '../../hooks';
+import { store } from '../../store';
+import { fetchCommentsAction } from '../../store/api-action';
 
 type MoviePageReviewsProps = {
   filmId: number;
-  reviews: Comments;
 };
 
-function MoviePageReviews({
-  reviews,
-  filmId,
-}: MoviePageReviewsProps): JSX.Element {
+function MoviePageReviews({ filmId }: MoviePageReviewsProps): JSX.Element {
   const gridCols: JSX.Element[][] = [[], []];
 
-  const movieReviews = reviews.filter((review) => review.id === filmId);
+  useEffect(() => {
+    store.dispatch(fetchCommentsAction());
+  }, []);
 
-  movieReviews.forEach((review, index) => {
+  const { comments } = useAppSelector((state) => state);
+
+  const movieReviews = comments.filter(
+    (comment: any) => comment.attributes.movie.data?.id === filmId
+  );
+
+  movieReviews.forEach((review: any, index: number) => {
     const reviews = (
       <div
         className="review"
         key={`${index.toString()} - ${review.id.toString()}`}
       >
         <blockquote className="review__quote">
-          <p className="review__text">{review.comment}</p>
+          <p className="review__text">{review?.attributes.comment}</p>
           <footer className="review__details">
-            <cite className="review__author">{review.user.name}</cite>
+            <cite className="review__author">
+              {review.attributes.reviewer.data?.attributes.name ||
+                review.attributes.users_permissions_user}
+            </cite>
             <time
               className="review__date"
               dateTime={new Date(
-                new Date(review.date).toISOString()
+                new Date(review?.attributes.date).toISOString()
               ).toDateString()}
             >
-              {review.date}
+              {review?.attributes.date}
             </time>
           </footer>
         </blockquote>
 
-        <div className="review__rating">{review.rating}</div>
+        <div className="review__rating">{review?.attributes.rating}</div>
       </div>
     );
 

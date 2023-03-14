@@ -4,14 +4,23 @@ import { api, store } from '.';
 import { errorHandle } from '../api/error-handle';
 import { dropToken, getToken, saveToken } from '../api/token';
 import { AppRoute, APIRoute, AuthStatus } from '../constants';
-import { loadMovies, redirectToRoute, requireAuthorization } from './action';
-import { Movies } from '../mocks/movieType';
+import {
+  loadComments,
+  loadMovie,
+  loadMovies,
+  redirectToRoute,
+  requireAuthorization,
+  setErrorMovieLoading,
+} from './action';
+import { Movie } from '../mocks/movieType';
 import { AuthData, UserData } from '../types/data';
+import { AddComment } from '../types/AddComment';
+import { Comment } from '../mocks/commentType';
 
-async function getMovies(url: string): Promise<Movies | AxiosError> {
+async function getMovies(url: string): Promise<Movie[] | AxiosError> {
   try {
     return api
-      .get<Movies>(process.env.REACT_APP_API_URL + url)
+      .get<Movie[]>(process.env.REACT_APP_API_URL + url)
       .then((res: AxiosResponse) => res.data.data);
   } catch (e: any) {
     const error = e as AxiosError;
@@ -24,7 +33,72 @@ export const fetchMoviesAction = createAsyncThunk(
   async () => {
     try {
       const data = await getMovies(APIRoute.Movies);
-      store.dispatch(loadMovies(data as Movies));
+      store.dispatch(loadMovies(data as Movie[]));
+    } catch (error) {
+      errorHandle(error);
+    }
+  }
+);
+
+export const fetchMovieAction = createAsyncThunk(
+  'data/fetchMovie',
+  async (id: string | number | undefined) => {
+    try {
+      const data = await api
+        .get<Movie>(
+          process.env.REACT_APP_API_URL + `${APIRoute.Movie}/${id}?populate=*`
+        )
+        .then((res: AxiosResponse) => res.data.data);
+      data && store.dispatch(setErrorMovieLoading(false));
+      store.dispatch(loadMovie(data as Movie));
+    } catch (error) {
+      store.dispatch(setErrorMovieLoading(true));
+      errorHandle(error);
+    }
+  }
+);
+
+export const fetchCommentsAction = createAsyncThunk(
+  'data/fetchComments',
+  async () => {
+    try {
+      const data = await api
+        .get<Comment[]>(process.env.REACT_APP_API_URL + APIRoute.Comments)
+        .then((res: AxiosResponse) => res.data.data);
+      store.dispatch(loadComments(data as Comment[]));
+    } catch (error) {
+      errorHandle(error);
+    }
+  }
+);
+
+export const leaveCommentAction = createAsyncThunk(
+  'comment/leaveComment',
+  async ({
+    movie,
+    comment,
+    rating,
+    date,
+    users_permissions_user,
+  }: AddComment) => {
+    try {
+      const { data } = await api.post(
+        process.env.REACT_APP_API_URL + APIRoute.CommentUpload,
+        {
+          data: {
+            movie,
+            comment,
+            rating,
+            date,
+            users_permissions_user,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer + ${getToken()}`,
+          },
+        }
+      );
     } catch (error) {
       errorHandle(error);
     }
@@ -42,7 +116,6 @@ export const checkAuthStatus = createAsyncThunk('user/checkAuth', async () => {
 
   if (getToken()) {
     store.dispatch(requireAuthorization(AuthStatus.Auth));
-    alert(store.getState().user);
   }
 });
 

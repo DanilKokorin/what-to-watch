@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import App from './components/app/app';
-import { commentsMock } from './mocks/commentsMock';
 import { store } from './store';
 import { checkAuthStatus, fetchMoviesAction } from './store/api-action';
 
@@ -20,7 +19,7 @@ root.render(
   <React.StrictMode>
     <ToastContainer />
     <Provider store={store}>
-      <App reviews={commentsMock} />
+      <App />
     </Provider>
   </React.StrictMode>
 );

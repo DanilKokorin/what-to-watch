@@ -1,12 +1,8 @@
-type Comment = {
+export type Comment = {
+  id: number;
   comment: string;
   date: string;
-  id: number;
   rating: number;
-  user: {
-    id: number;
-    name: string;
-  };
+  user?: { id: number; name: string };
+  users_permissions_user?: number;
 };
-
-export type Comments = Comment[];

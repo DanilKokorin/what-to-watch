@@ -9,15 +9,10 @@ import Player from '../player/player';
 import PrivateRoute from '../../route/private-route';
 import Layout from '../../route/layout';
 import Movie from '../movie/movie';
-import { Comments } from '../../mocks/commentType';
 import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../history-route/browser-history';
 
-type AppScreenProps = {
-  reviews: Comments;
-};
-
-function App({ reviews }: AppScreenProps): JSX.Element {
+function App(): JSX.Element {
   return (
     <HistoryRouter history={browserHistory}>
       <Routes>
@@ -33,7 +28,7 @@ function App({ reviews }: AppScreenProps): JSX.Element {
             }
           />
           <Route path={AppRoute.Film}>
-            <Route index element={<Movie reviews={reviews} />} />
+            <Route index element={<Movie />} />
             <Route
               path={AppRoute.Review}
               element={

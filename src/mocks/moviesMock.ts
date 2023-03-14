@@ -1,6 +1,6 @@
-import { Movies } from './movieType';
+import { Movie } from './movieType';
 
-export const moviesMock: Movies = [
+export const moviesMock: Movie[] = [
   {
     id: 1,
     name: 'The Grand Budapest Hotel',
