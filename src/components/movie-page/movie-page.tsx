@@ -1,3 +1,5 @@
+import { movieRating } from '../../constants';
+
 type MoviePageProps = {
   rating: number | undefined;
   description: string;
@@ -18,8 +20,8 @@ function MoviePage({
       <div className="film-rating">
         <div className="film-rating__score">{rating}</div>
         <p className="film-rating__meta">
-          <span className="film-rating__level">Very good</span>
-          <span className="film-rating__count">{`${scoresCount} ratings`}</span>
+          <span className="film-rating__level">{movieRating(rating)}</span>
+          <span className="film-rating__count">{scoresCount} ratings</span>
         </p>
       </div>
 
@@ -32,7 +34,7 @@ function MoviePage({
 
         <p className="film-card__starring">
           <strong>
-            Starring: {`${starring.map((item: any) => item.attributes.name)}`}
+            Starring: {`${starring?.map((item: any) => item.attributes?.name)}`}
           </strong>
         </p>
       </div>

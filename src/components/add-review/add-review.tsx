@@ -16,7 +16,7 @@ function AddReview(): JSX.Element {
       <div className="film-card__header">
         <div className="film-card__bg">
           <img
-            src={`http://localhost:1337${movie.attributes?.backgroundImage.data.attributes?.url}`}
+            src={`http://localhost:1337${movie?.attributes.backgroundImage.data.attributes.url}`}
             alt={movie?.attributes.name}
           />
         </div>
@@ -27,8 +27,8 @@ function AddReview(): JSX.Element {
 
         <div className="film-card__poster film-card__poster--small">
           <img
-            src={`http://localhost:1337${movie.attributes?.posterImage.data.attributes?.url}`}
-            alt={movie.attributes.name}
+            src={`http://localhost:1337${movie?.attributes.posterImage.data.attributes.url}`}
+            alt={movie?.attributes.name}
             width="218"
             height="327"
           />

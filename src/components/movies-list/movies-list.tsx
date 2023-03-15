@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { Movies } from '../../mocks/movieType';
+import { Movie } from '../../mocks/movieType';
 import { getMoviesByGenre } from '../../store/action';
 import Spinner from '../spinner/spinner';
 
@@ -28,7 +28,7 @@ function MoviesList({
     useAppSelector((state) => state);
 
   const [activeMovieId, setActiveMovieId] = useState<number>(-1);
-  const [currentMovies, setCurrentMovies] = useState<Movies>([]);
+  const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [cache, setCache] = useState<any>([]);
 
   const dispatch = useAppDispatch();
