@@ -72,7 +72,7 @@ export const fetchCommentsAction = createAsyncThunk(
   }
 );
 
-export const leaveCommentAction = createAsyncThunk(
+export const leaveReviewAction = createAsyncThunk(
   'comment/leaveComment',
   async ({
     movie,

@@ -1,35 +1,24 @@
-import { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getToken } from '../../api/token';
 import { AppRoute, RatingValues, ReviewLength } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { commentSended } from '../../store/action';
-import { leaveCommentAction } from '../../store/api-action';
+import { leaveReviewAction } from '../../store/api-action';
 
 import jwt_decode from 'jwt-decode';
-
-const makeArray = () => {
-  const result = [];
-  for (let i = 10; i > 0; i--) {
-    result.push(i);
-  }
-  return result;
-};
+import Rating from './review-rating/rating';
 
 function AddReviewForm(): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const starsArray = makeArray();
-  const [formData, setFormData] = useState({ rating: 0, review: '' });
-  const [rateError, setRateError] = useState<boolean | null>(null);
-  const [reviewError, setReviewError] = useState<boolean | null>(null);
-  const { isCommentSended } = useAppSelector((state) => state);
-
   const user_id = jwt_decode(getToken()) as any;
+
+  const [formData, setFormData] = useState({ rating: 0, review: '' });
+  const { isCommentSended } = useAppSelector((state) => state);
 
   const date = new Date().toLocaleDateString('en-us', {
     month: 'long',
@@ -49,7 +38,7 @@ function AddReviewForm(): JSX.Element {
     if (isRateValid && isCommentValid) {
       dispatch(commentSended(true));
       dispatch(
-        leaveCommentAction({
+        leaveReviewAction({
           movie: pathId,
           comment: formData.review,
           rating: formData.rating,
@@ -62,9 +51,16 @@ function AddReviewForm(): JSX.Element {
           review: '',
         });
       });
+      toast.info('Комментарий отправлен');
       navigate(generatePath(AppRoute.Film, { id: `${pathId}` }));
     } else {
-      setReviewError(true);
+      if (isRateValid && !isCommentValid) {
+        toast.warn(
+          'Длина отзыва должна быть не менее 50 и не более 400 символов'
+        );
+      } else {
+        toast.warn('Укажите рейтинг');
+      }
     }
   };
 
@@ -73,8 +69,6 @@ function AddReviewForm(): JSX.Element {
   ): void => {
     const { name, value } = event.target;
     dispatch(commentSended(false));
-    setRateError(false);
-    setReviewError(false);
     setFormData({ ...formData, [name]: value });
   };
 
@@ -87,33 +81,8 @@ function AddReviewForm(): JSX.Element {
 
   return (
     <div className="add-review">
-      {rateError ? toast.warn('Укажите рейтинг') : ''}
-      {reviewError
-        ? toast.warn(
-            'Длина отзыва должна быть не менее 50 и не более 400 символов'
-          )
-        : ''}
-      {isCommentSended ? toast.warn('Комментарий отправлен') : ''}
       <form action="#" className="add-review__form">
-        <div className="rating">
-          <div className="rating__stars">
-            {starsArray.map((item) => (
-              <Fragment key={item}>
-                <input
-                  className="rating__input"
-                  id={`star-${item}`}
-                  type="radio"
-                  name="rating"
-                  value={item}
-                  onChange={(event) => fieldChangeHandle(event)}
-                />
-                <label className="rating__label" htmlFor={`star-${item}`}>
-                  Rating {item}
-                </label>
-              </Fragment>
-            ))}
-          </div>
-        </div>
+        <Rating onStarSelect={(event) => fieldChangeHandle(event)} />
 
         <div className="add-review__text">
           <textarea
