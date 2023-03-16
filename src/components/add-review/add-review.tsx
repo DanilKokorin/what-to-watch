@@ -7,7 +7,7 @@ function AddReview(): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
 
-  const { movies } = useAppSelector((state) => state);
+  const { movies } = useAppSelector(({ movies }) => movies);
 
   const movie: any = movies.find((movie) => movie.id === pathId);
 

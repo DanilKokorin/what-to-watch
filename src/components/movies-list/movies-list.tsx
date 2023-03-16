@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
+import { NameSpace } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Movie } from '../../mocks/movieType';
-import { getMoviesByGenre } from '../../store/action';
+import { getMoviesByGenre } from '../../store/movie-data/movie-data';
 import Spinner from '../spinner/spinner';
 
 type MoviesListProps = {
@@ -25,7 +26,7 @@ function MoviesList({
   selectedMovieCard,
 }: MoviesListProps) {
   const { genre, moviesByGenre, moviesPerPage, currentPage, isDataLoaded } =
-    useAppSelector((state) => state);
+    useAppSelector(({ movies }) => movies);
 
   const [activeMovieId, setActiveMovieId] = useState<number>(-1);
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
@@ -51,7 +52,7 @@ function MoviesList({
   useEffect(() => {
     if (selectedMovieCard) {
       const moreLikeThis = moviesByGenre
-        .filter((item) => item.id !== selectedMovieId)
+        .filter((item: any) => item.id !== selectedMovieId)
         .slice(0, 4);
 
       setCache(moreLikeThis);

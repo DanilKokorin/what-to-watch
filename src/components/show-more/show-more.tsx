@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setCurrentPage } from '../../store/action';
+import { setCurrentPage } from '../../store/movie-data/movie-data';
 
 function ShowMore() {
-  const { currentPage, totalCountMovies, moviesPerPage, moviesByGenre } =
-    useAppSelector((state) => state);
+  const { moviesByGenre, moviesPerPage, currentPage, totalCountMovies } =
+    useAppSelector(({ movies }) => movies);
+
   const [showMoreButton, setShowMoreButton] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();

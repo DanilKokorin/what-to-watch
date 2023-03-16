@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setCurrentPage, setGenre } from '../../store/action';
 import { Genres } from '../../constants';
+import { setCurrentPage, setGenre } from '../../store/movie-data/movie-data';
 
 function GenresList() {
-  const { movies, genre } = useAppSelector((state) => state);
+  const { movies, genre } = useAppSelector(({ movies }) => movies);
 
   const allGenres = Object.values(
     movies!.map((movie: any) => movie.attributes.genre)

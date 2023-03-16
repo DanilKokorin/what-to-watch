@@ -3,7 +3,7 @@ import Header from '../header/header';
 import MovieCard from '../movie-card/movie-card';
 
 function MyList(): JSX.Element {
-  const { movies } = useAppSelector((state) => state);
+  const { movies } = useAppSelector(({ movies }) => movies);
 
   return (
     <>

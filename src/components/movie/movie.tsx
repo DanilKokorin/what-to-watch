@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from 'react';
 import { generatePath, Link, useParams } from 'react-router-dom';
-import { AppRoute, AuthStatus } from '../../constants';
+import { AppRoute, AuthStatus, NameSpace } from '../../constants';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
 import { useAppSelector } from '../../hooks';
 import { store } from '../../store';
@@ -33,13 +33,19 @@ function Movie(): JSX.Element {
   const params = useParams();
   const pathId = Number(params.id);
 
+  const { movie } = useAppSelector(({ movies }) => movies);
+
+  const errorMovieLoading = useAppSelector(
+    (state) => state[NameSpace.errors].errorMovieLoading
+  );
+
+  const authStatus = useAppSelector(
+    (state) => state[NameSpace.user].authStatus
+  );
+
   useEffect(() => {
     store.dispatch(fetchMovieAction(pathId));
-  }, []);
-
-  const { movie, authStatus, errorMovieLoading } = useAppSelector(
-    (state) => state
-  );
+  }, [pathId]);
 
   if (errorMovieLoading) {
     return <ErrorPage />;

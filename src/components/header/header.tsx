@@ -6,8 +6,8 @@ import { logoutAction } from '../../store/api-action';
 import Logo from '../logo/logo';
 
 function Header(): JSX.Element {
-  const { authStatus } = useAppSelector((state) => state);
-  const { user } = useAppSelector((state) => state);
+  const { authStatus, user } = useAppSelector(({ user }) => user);
+
   const isAuthorized = authStatus === AuthStatus.Auth;
 
   const navigate = useNavigate();

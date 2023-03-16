@@ -5,7 +5,7 @@ function Player(): JSX.Element {
   const params = useParams();
   const selectedId = Number(params.id);
 
-  const { movies } = useAppSelector((state) => state);
+  const { movies } = useAppSelector(({ movies }) => movies);
 
   const movie: any = movies.find((movie: any) => movie.id === selectedId);
 

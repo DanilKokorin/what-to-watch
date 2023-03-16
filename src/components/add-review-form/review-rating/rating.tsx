@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment } from 'react';
+import { Fragment, memo } from 'react';
 
 const createArray = (qty: number) => {
   const count = [];
@@ -9,10 +9,10 @@ const createArray = (qty: number) => {
 };
 
 type RatingProps = {
-  onStarSelect: (event: ChangeEvent<HTMLInputElement>) => void;
+  onStarSelect: (value: number) => void;
 };
 
-export default function Rating({ onStarSelect }: RatingProps) {
+function Rating({ onStarSelect }: RatingProps) {
   const starsArray = createArray(10);
 
   return (
@@ -27,9 +27,7 @@ export default function Rating({ onStarSelect }: RatingProps) {
                 type="radio"
                 name="rating"
                 value={item}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  onStarSelect(event)
-                }
+                onChange={() => onStarSelect(item)}
               />
               <label className="rating__label" htmlFor={`star-${item}`}>
                 Rating {item}
@@ -41,3 +39,5 @@ export default function Rating({ onStarSelect }: RatingProps) {
     </div>
   );
 }
+
+export default memo(Rating);
