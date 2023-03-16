@@ -1,11 +1,11 @@
 import Logo from '../logo/logo';
 import { FormEvent, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppRoute, AuthStatus } from '../../constants';
+import { AppRoute, AuthStatus, NameSpace } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-action';
 import { AuthData } from '../../types/data';
-import { setUser } from '../../store/action';
+import { setUser } from '../../store/user-process/user-process';
 
 function SignIn(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
@@ -14,7 +14,9 @@ function SignIn(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { authStatus } = useAppSelector((state) => state);
+  const authStatus = useAppSelector(
+    (state) => state[NameSpace.user].authStatus
+  );
 
   useEffect(() => {
     loginRef.current?.focus();

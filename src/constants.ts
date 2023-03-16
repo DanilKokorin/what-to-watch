@@ -66,3 +66,10 @@ export const movieRating = (rating: number | undefined): string | undefined => {
     }
   }
 };
+
+export enum NameSpace {
+  user = 'user',
+  movies = 'movies',
+  reviews = 'reviews',
+  errors = 'errors',
+}

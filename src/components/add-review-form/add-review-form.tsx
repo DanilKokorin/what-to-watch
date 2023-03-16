@@ -1,14 +1,14 @@
-import { ChangeEvent, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getToken } from '../../api/token';
 import { AppRoute, RatingValues, ReviewLength } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { commentSended } from '../../store/action';
 import { leaveReviewAction } from '../../store/api-action';
 
 import jwt_decode from 'jwt-decode';
 import Rating from './review-rating/rating';
+import { commentSended } from '../../store/review-data/review-data';
 
 function AddReviewForm(): JSX.Element {
   const params = useParams();
@@ -17,8 +17,10 @@ function AddReviewForm(): JSX.Element {
   const dispatch = useAppDispatch();
   const user_id = jwt_decode(getToken()) as any;
 
-  const [formData, setFormData] = useState({ rating: 0, review: '' });
-  const { isCommentSended } = useAppSelector((state) => state);
+  const [rating, setRating] = useState<number>(0);
+  const [review, setReview] = useState<string>('');
+
+  const { isCommentSended } = useAppSelector(({ reviews }) => reviews);
 
   const date = new Date().toLocaleDateString('en-us', {
     month: 'long',
@@ -29,27 +31,24 @@ function AddReviewForm(): JSX.Element {
   const sendReview = (event: any) => {
     event.preventDefault();
     const isCommentValid =
-      formData.review.trim().length >= ReviewLength.MIN &&
-      formData.review.trim().length <= ReviewLength.MAX;
+      review.trim().length >= ReviewLength.MIN &&
+      review.trim().length <= ReviewLength.MAX;
     const isRateValid =
-      formData.rating >= RatingValues.MIN &&
-      formData.rating <= RatingValues.MAX;
+      rating >= RatingValues.MIN && rating <= RatingValues.MAX;
 
     if (isRateValid && isCommentValid) {
       dispatch(commentSended(true));
       dispatch(
         leaveReviewAction({
           movie: pathId,
-          comment: formData.review,
-          rating: formData.rating,
+          comment: review,
+          rating: rating,
           date,
           users_permissions_user: user_id.id,
         })
       ).then(() => {
-        setFormData({
-          rating: 0,
-          review: '',
-        });
+        setRating(0);
+        setReview('');
       });
       toast.info('Комментарий отправлен');
       navigate(generatePath(AppRoute.Film, { id: `${pathId}` }));
@@ -64,12 +63,14 @@ function AddReviewForm(): JSX.Element {
     }
   };
 
-  const fieldChangeHandle = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    const { name, value } = event.target;
+  const saveStarValue = useCallback((value: number): void => {
     dispatch(commentSended(false));
-    setFormData({ ...formData, [name]: value });
+    setRating(value);
+  }, []);
+
+  const textChangeHandle = (comment: string): void => {
+    dispatch(commentSended(false));
+    setReview(comment);
   };
 
   const isValidForSending = (rating: number, comment: string) => {
@@ -82,7 +83,7 @@ function AddReviewForm(): JSX.Element {
   return (
     <div className="add-review">
       <form action="#" className="add-review__form">
-        <Rating onStarSelect={(event) => fieldChangeHandle(event)} />
+        <Rating onStarSelect={saveStarValue} />
 
         <div className="add-review__text">
           <textarea
@@ -90,23 +91,23 @@ function AddReviewForm(): JSX.Element {
             name="review"
             id="review-text"
             placeholder="Review text"
-            onChange={(event) => fieldChangeHandle(event)}
-            value={formData.review}
+            onChange={({ target }) => textChangeHandle(target.value)}
+            value={review}
+            maxLength={ReviewLength.MAX}
+            minLength={ReviewLength.MIN}
           />
           <div className="add-review__submit">
             <button
               className="add-review__btn"
               type="submit"
               onClick={sendReview}
-              disabled={
-                isCommentSended ||
-                isValidForSending(formData.rating, formData.review)
-              }
+              disabled={isCommentSended || isValidForSending(rating, review)}
             >
               Post
             </button>
           </div>
         </div>
+        <p>Осталось символов: {ReviewLength.MAX - review.length}</p>
       </form>
     </div>
   );

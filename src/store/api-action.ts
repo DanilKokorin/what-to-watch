@@ -4,18 +4,15 @@ import { api, store } from '.';
 import { errorHandle } from '../api/error-handle';
 import { dropToken, getToken, saveToken } from '../api/token';
 import { AppRoute, APIRoute, AuthStatus } from '../constants';
-import {
-  loadComments,
-  loadMovie,
-  loadMovies,
-  redirectToRoute,
-  requireAuthorization,
-  setErrorMovieLoading,
-} from './action';
 import { Movie } from '../mocks/movieType';
 import { AuthData, UserData } from '../types/data';
 import { AddComment } from '../types/AddComment';
 import { Comment } from '../mocks/commentType';
+import { redirectToRoute } from './action';
+import { requireAuthorization } from './user-process/user-process';
+import { loadMovie, loadMovies } from './movie-data/movie-data';
+import { setErrorMovieLoading } from './error-process/error-process';
+import { loadComments } from './review-data/review-data';
 
 async function getMovies(url: string): Promise<Movie[] | AxiosError> {
   try {

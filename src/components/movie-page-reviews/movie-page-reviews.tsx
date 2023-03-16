@@ -14,7 +14,7 @@ function MoviePageReviews({ filmId }: MoviePageReviewsProps): JSX.Element {
     store.dispatch(fetchCommentsAction());
   }, []);
 
-  const { comments } = useAppSelector((state) => state);
+  const { comments } = useAppSelector(({ reviews }) => reviews);
 
   const movieReviews = comments.filter(
     (comment: any) => comment.attributes.movie.data?.id === filmId
