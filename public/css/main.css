@@ -1019,6 +1019,7 @@ main {
 
 .player__time-value {
   width: 60px;
+  width: fit-content;
   -ms-flex-negative: 0;
       flex-shrink: 0;
   text-align: right;

@@ -11,3 +11,8 @@ export type UserData = {
     email: string;
   };
 };
+
+export type FavoriteMovie = {
+  movies: number[];
+  users_permissions_user: string;
+};

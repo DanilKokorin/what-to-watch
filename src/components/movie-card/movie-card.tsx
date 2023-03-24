@@ -25,6 +25,7 @@ function MovieCard(props: MovieCardProps) {
     onLeaveCardCallback,
   } = props;
 
+  // onHoverCardCallback  <->  <VideoPlayer />
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 

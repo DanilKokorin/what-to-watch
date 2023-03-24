@@ -1,10 +1,13 @@
-import { ReactNode, useEffect } from 'react';
-import { generatePath, Link, useParams } from 'react-router-dom';
-import { AppRoute, AuthStatus, NameSpace } from '../../constants';
+import { ReactNode, useEffect, useState } from 'react';
+import { generatePath, Link, useNavigate, useParams } from 'react-router-dom';
+import { AppRoute, AuthStatus, NameSpace, user_id } from '../../constants';
 import withMovieCard from '../../hocs/with-movie-card/with-movie-card';
-import { useAppSelector } from '../../hooks';
-import { store } from '../../store';
-import { fetchMovieAction } from '../../store/api-action';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import {
+  addFavoriteAction,
+  fetchFavoritesAction,
+  fetchMovieAction,
+} from '../../store/api-action';
 import ErrorPage from '../error-page/error-page';
 import Header from '../header/header';
 import MoviePageDetails from '../movie-page-details/movie-page-details';
@@ -30,28 +33,70 @@ function toHoursAndMinutes(totalMinutes: number) {
 }
 
 function Movie(): JSX.Element {
+  const dispatch = useAppDispatch();
   const params = useParams();
   const pathId = Number(params.id);
-
-  const { movie } = useAppSelector(({ movies }) => movies);
-
-  const errorMovieLoading = useAppSelector(
-    (state) => state[NameSpace.errors].errorMovieLoading
-  );
+  const navigate = useNavigate();
 
   const authStatus = useAppSelector(
     (state) => state[NameSpace.user].authStatus
   );
+  const isAuthorized = authStatus === AuthStatus.Auth;
+
+  const { movie } = useAppSelector(({ movies }) => movies);
+  const { errorMovieLoading } = useAppSelector(({ errors }) => errors);
+
+  const { favorites } = useAppSelector(({ favorites }) => favorites);
+  const [favoritesIDs, setFavoritesIDs] = useState<number[]>([]);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  const runTime = toHoursAndMinutes(movie?.attributes.runTime);
 
   useEffect(() => {
-    store.dispatch(fetchMovieAction(pathId));
+    dispatch(fetchMovieAction(pathId));
+    isAuthorized && dispatch(fetchFavoritesAction());
   }, [pathId]);
+
+  useEffect(() => {
+    const ids = favorites.map((favorite: any) =>
+      favorite.attributes.movies.data.map((movie: any) => movie.id)
+    )[0];
+    setFavoritesIDs(ids);
+    setIsFavorite(favoritesIDs && favoritesIDs.includes(pathId));
+  }, [favorites]);
 
   if (errorMovieLoading) {
     return <ErrorPage />;
   }
 
-  const runTime = toHoursAndMinutes(movie?.attributes.runTime);
+  const addToFavorite = (event?: any) => {
+    event.preventDefault();
+
+    if (!isAuthorized) {
+      return navigate(AppRoute.Login);
+    }
+
+    if (!isFavorite) {
+      dispatch(
+        addFavoriteAction({
+          movies: [...favoritesIDs, pathId],
+          users_permissions_user: user_id && user_id.id,
+        })
+      );
+      setIsFavorite(true);
+      setFavoritesIDs([...favoritesIDs, pathId]);
+    } else {
+      const originIDs = favoritesIDs.filter((item) => item !== pathId);
+      dispatch(
+        addFavoriteAction({
+          movies: originIDs,
+          users_permissions_user: user_id && user_id.id,
+        })
+      );
+      setIsFavorite(false);
+      setFavoritesIDs([...originIDs]);
+    }
+  };
 
   const tabs: TabsConfigItem[] = [
     {
@@ -117,31 +162,43 @@ function Movie(): JSX.Element {
               </p>
 
               <div className="film-card__buttons">
-                <button
-                  className="btn btn--play film-card__button"
-                  type="button"
+                <Link
+                  className="film-card__button"
+                  to={generatePath(AppRoute.Player, { id: `${pathId}` })}
                 >
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s" />
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button
-                  className="btn btn--list film-card__button"
-                  type="button"
-                >
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add" />
-                  </svg>
-                  <span>My list</span>
-                </button>
-                {authStatus === AuthStatus.Auth && (
-                  <Link
-                    to={generatePath(AppRoute.Review, { id: `${pathId}` })}
-                    className="btn film-card__button"
+                  <button
+                    className="btn btn--play film-card__button"
+                    type="button"
                   >
-                    Add review
-                  </Link>
+                    <svg viewBox="0 0 19 19" width="19" height="19">
+                      <use xlinkHref="#play-s" />
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                </Link>
+                {isAuthorized && (
+                  <>
+                    <button
+                      className="btn btn--list film-card__button"
+                      type="button"
+                      onClick={addToFavorite}
+                    >
+                      <svg viewBox="0 0 19 20" width="19" height="20">
+                        {isFavorite ? (
+                          <use xlinkHref="#in-list" />
+                        ) : (
+                          <use xlinkHref="#add" />
+                        )}
+                      </svg>
+                      <span>My list</span>
+                    </button>
+                    <Link
+                      to={generatePath(AppRoute.Review, { id: `${pathId}` })}
+                      className="btn film-card__button"
+                    >
+                      Add review
+                    </Link>
+                  </>
                 )}
               </div>
             </div>

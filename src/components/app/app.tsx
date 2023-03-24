@@ -5,12 +5,12 @@ import ErrorPage from '../error-page/error-page';
 import SignIn from '../sign-in/sign-in';
 import MyList from '../my-list/my-list';
 import AddReview from '../add-review/add-review';
-import Player from '../player/player';
 import PrivateRoute from '../../route/private-route';
 import Layout from '../../route/layout';
 import Movie from '../movie/movie';
 import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../history-route/browser-history';
+import Player from '../player/player';
 
 function App(): JSX.Element {
   return (

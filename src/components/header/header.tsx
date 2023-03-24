@@ -36,8 +36,8 @@ function Header(): JSX.Element {
             <li className="user-block__item">
               <Link
                 className="user-block__link"
-                onClick={(evt: any) => {
-                  evt.preventDefault();
+                onClick={(event: any) => {
+                  event.preventDefault();
                   store.dispatch(logoutAction());
                 }}
                 to="/"

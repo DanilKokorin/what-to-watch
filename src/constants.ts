@@ -1,6 +1,7 @@
-export const TITLE = 'The Grand Budapest Hotel';
-export const GENRE = 'Drama';
-export const DATE = '2014';
+import { getToken } from './api/token';
+import jwt_decode from 'jwt-decode';
+
+export const user_id = getToken() && (jwt_decode(getToken()) as any);
 
 export enum HTTP_CODE {
   OK = 202,
@@ -13,11 +14,14 @@ export enum HTTP_CODE {
 export enum APIRoute {
   Movies = '/movies?populate=*',
   Movie = '/movies',
+  Promo = '/promos?populate=*',
   Comments = '/comments/?populate=*',
   CommentUpload = '/comments',
   LoginCheker = '/auth-check-temps',
   Login = '/auth/local',
   Logout = '/logout',
+  Favorites = '/favorites/?populate=*',
+  FavoritesUpload = '/favorites',
 }
 
 export enum AppRoute {
@@ -47,7 +51,7 @@ export const RatingValues = {
 };
 
 export const ReviewLength = {
-  MIN: 50,
+  MIN: 2,
   MAX: 400,
 };
 
@@ -72,4 +76,5 @@ export enum NameSpace {
   movies = 'movies',
   reviews = 'reviews',
   errors = 'errors',
+  favorites = 'favorites',
 }

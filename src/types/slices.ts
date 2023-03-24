@@ -11,6 +11,7 @@ export type MovieState = {
   genre: string;
   movies: Movie[];
   movie: any;
+  promos: any;
   moviesByGenre: Movie[];
   isDataLoaded: boolean;
   totalCountMovies: number;
@@ -27,4 +28,9 @@ export type ReviewState = {
 
 export type ErrorProcess = {
   errorMovieLoading: boolean;
+};
+
+export type FavoritesState = {
+  favorites: Movie[];
+  emptyFavorites: boolean;
 };

@@ -1,5 +1,4 @@
 import { Fragment, useEffect, useState } from 'react';
-import { NameSpace } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { Movie } from '../../mocks/movieType';
 import { getMoviesByGenre } from '../../store/movie-data/movie-data';

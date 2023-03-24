@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react';
 import { generatePath, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getToken } from '../../api/token';
-import { AppRoute, RatingValues, ReviewLength } from '../../constants';
+import { AppRoute, RatingValues, ReviewLength, user_id } from '../../constants';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { leaveReviewAction } from '../../store/api-action';
 
-import jwt_decode from 'jwt-decode';
 import Rating from './review-rating/rating';
 import { commentSended } from '../../store/review-data/review-data';
 
@@ -15,7 +13,6 @@ function AddReviewForm(): JSX.Element {
   const pathId = Number(params.id);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const user_id = jwt_decode(getToken()) as any;
 
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>('');
@@ -44,7 +41,7 @@ function AddReviewForm(): JSX.Element {
           comment: review,
           rating: rating,
           date,
-          users_permissions_user: user_id.id,
+          users_permissions_user: user_id && user_id.id,
         })
       ).then(() => {
         setRating(0);
