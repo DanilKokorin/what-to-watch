@@ -39,6 +39,18 @@ function VideoPlayer(props: VideoPlayerProps): JSX.Element {
     videoRef.current.pause();
   }, [isPlaying]);
 
+  // useEffect(() => {
+  //   let timeout: any;
+
+  //   if (isPlaying) {
+  //     timeout = setTimeout(() => videoRef.current?.play(), 1000);
+  //   } else {
+  //     videoRef.current?.load();
+  //   }
+
+  //   return () => clearTimeout(timeout);
+  // }, [isPlaying]);
+
   return (
     <div>
       <video

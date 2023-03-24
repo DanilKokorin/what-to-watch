@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { NameSpace } from '../../constants';
 import { MovieState } from '../../types/slices';
-// import { MovieState } from '../../types/state';
 
 const initialState: MovieState = {
   genre: '',
   movies: [],
+  promos: [],
   movie: [][0],
   moviesByGenre: [],
   isDataLoaded: false,
@@ -18,6 +18,9 @@ export const movieData = createSlice({
   name: NameSpace.movies,
   initialState,
   reducers: {
+    loadPromos: (state, action) => {
+      state.promos = action.payload;
+    },
     loadMovie: (state, action) => {
       state.movie = action.payload;
     },
@@ -45,6 +48,7 @@ export const movieData = createSlice({
 });
 
 export const {
+  loadPromos,
   loadMovie,
   loadMovies,
   setGenre,

@@ -5,14 +5,15 @@ import { errorHandle } from '../api/error-handle';
 import { dropToken, getToken, saveToken } from '../api/token';
 import { AppRoute, APIRoute, AuthStatus } from '../constants';
 import { Movie } from '../mocks/movieType';
-import { AuthData, UserData } from '../types/data';
+import { AuthData, FavoriteMovie, UserData } from '../types/data';
 import { AddComment } from '../types/AddComment';
 import { Comment } from '../mocks/commentType';
 import { redirectToRoute } from './action';
 import { requireAuthorization } from './user-process/user-process';
-import { loadMovie, loadMovies } from './movie-data/movie-data';
+import { loadMovie, loadMovies, loadPromos } from './movie-data/movie-data';
 import { setErrorMovieLoading } from './error-process/error-process';
 import { loadComments } from './review-data/review-data';
+import { setEmpty, setFavorites } from './favorites-data/favorites-data';
 
 async function getMovies(url: string): Promise<Movie[] | AxiosError> {
   try {
@@ -48,6 +49,22 @@ export const fetchMovieAction = createAsyncThunk(
         .then((res: AxiosResponse) => res.data.data);
       data && store.dispatch(setErrorMovieLoading(false));
       store.dispatch(loadMovie(data as Movie));
+    } catch (error) {
+      store.dispatch(setErrorMovieLoading(true));
+      errorHandle(error);
+    }
+  }
+);
+
+export const fetchPromoAction = createAsyncThunk(
+  'data/fetchMovie',
+  async () => {
+    try {
+      const data = await api
+        .get<Movie>(process.env.REACT_APP_API_URL + APIRoute.Promo)
+        .then((res: AxiosResponse) => res.data.data);
+      data && store.dispatch(setErrorMovieLoading(false));
+      store.dispatch(loadPromos(data as Movie));
     } catch (error) {
       store.dispatch(setErrorMovieLoading(true));
       errorHandle(error);
@@ -103,6 +120,65 @@ export const leaveReviewAction = createAsyncThunk(
   }
 );
 
+export const fetchFavoritesAction = createAsyncThunk(
+  'data/fetchFavorites',
+  async () => {
+    try {
+      const data = await api
+        .get<Movie[]>(process.env.REACT_APP_API_URL + APIRoute.Favorites, {
+          headers: {
+            // apiClient -> Interceptors
+            Authorization: `Bearer ${getToken()}`,
+          },
+        })
+        .then((res: AxiosResponse) => res.data.data);
+
+      data && data[0].attributes.movies.data.length
+        ? store.dispatch(setEmpty(false))
+        : store.dispatch(setEmpty(true));
+      store.dispatch(setFavorites(data));
+      data && store.dispatch(setErrorMovieLoading(false));
+    } catch (error) {
+      store.dispatch(setErrorMovieLoading(true));
+      errorHandle(error);
+    }
+  }
+);
+
+export const addFavoriteAction = createAsyncThunk(
+  'favorites/setFavorites',
+  async ({ movies, users_permissions_user }: FavoriteMovie) => {
+    try {
+      // запрос user-id из Strapi favorite table
+      const id = await api
+        .get('http://localhost:1337/api/favorites/', {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        })
+        .then((id) => id.data.data[0].id);
+
+      const { data } = await api.put(
+        process.env.REACT_APP_API_URL + `${APIRoute.FavoritesUpload}/${id}`,
+        {
+          data: {
+            movies,
+            users_permissions_user,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+      store.dispatch(fetchFavoritesAction());
+    } catch (error) {
+      errorHandle(error);
+    }
+  }
+);
+
 export const checkAuthStatus = createAsyncThunk('user/checkAuth', async () => {
   // try {
   //   await api.get(process.env.REACT_APP_API_URL + APIRoute.LoginCheker);
@@ -145,9 +221,11 @@ export const logoutAction = createAsyncThunk('user/logout', async () => {
   try {
     // await api.delete(APIRoute.Logout);
     dropToken();
+    store.dispatch(setFavorites([]));
     store.dispatch(requireAuthorization(AuthStatus.NoAuth));
     store.dispatch(redirectToRoute(AppRoute.Main));
   } catch (error) {
     errorHandle(error);
+    store.dispatch(requireAuthorization(AuthStatus.NoAuth));
   }
 });
